@@ -1,0 +1,20 @@
+/* 
+Given a table GAMERS, pivot the table in such a manner that the Player is sorted in alphabetical order and displayed under 
+its corresponding Role. Print NULL if no more players are associated with the corresponding role. The roles are Healer, 
+Attacker, Defender, Tactician.
+*/
+SET @h=0, @a=0, @d=0, @t=0;
+SELECT MIN(Healer),MIN(Attacker),MIN(Defender),MIN(Tactician)
+FROM
+(SELECT IF(Role='Healer',Player,NULL) AS Healer,
+        IF(Role='Attacker',Player,NULL) AS Attacker,
+        IF(Role='Defender',Player,NULL) AS Defender,
+        IF(Role='Tactician',Player,NULL) AS Tactician,
+ CASE Role
+    WHEN 'Healer' THEN @h:=@h+1
+    WHEN 'Attacker' THEN @a:=@a+1
+    WHEN 'Defender' THEN @d:=@d+1
+    WHEN 'Tactician' THEN @t:=@t+1
+ END
+AS idn FROM GAMERS ORDER BY Player )
+AS temp GROUP BY temp.idn;
